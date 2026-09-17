@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -25,21 +29,51 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function register(Request $request)
     {
-        $validatedData = $request->validate([
-            'nama' => 'required|min:3',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8|max:10',
+        // Pastikan data pendaftaran sesuai aturan sebelum disimpan.
+        $registrationData = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'unique:users,email'],
+            'password' => ['required', 'string', 'min:8'],
         ]);
 
-        $user = \App\Models\User::create([
-            'name' => $validatedData['nama'],
-            'email' => $validatedData['email'],
-            'password' => bcrypt($validatedData['password']),
+        // Password harus di-hash agar tidak tersimpan sebagai teks biasa.
+        User::create([
+            'name' => $registrationData['name'],
+            'email' => $registrationData['email'],
+            'password' => Hash::make($registrationData['password']),
         ]);
 
-        \Illuminate\Support\Facades\Auth::login($user);
+        return redirect()->route('login')->with('success', 'User registered successfully!');
+    }
+
+    public function login(Request $request)
+    {
+        // Ambil email dan password yang akan digunakan untuk login.
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required', 'string'],
+        ]);
+
+        // Auth::attempt mencocokkan password dengan hash di database.
+        if (!Auth::attempt($credentials)) {
+            return back()->withErrors([
+                'email' => 'Email atau password salah.',
+            ])->onlyInput('email');
+        }
+
+        // Buat session baru setelah login berhasil untuk keamanan.
+        $request->session()->regenerate();
+
+        return redirect()->route('home')->with('success', 'Login berhasil. Selamat datang kembali!');
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return redirect()->route('home');
     }

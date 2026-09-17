@@ -27,7 +27,11 @@
 @endpush
 
 @section('content')
-    
+    @if (session('success'))
+        <div class="alert alert-success" role="alert">
+            {{ session('success') }}
+        </div>
+    @endif
 
     <main class="home-content py-4">
     <div id="carousel-sample" class="carousel slide" data-bs-ride="carousel">

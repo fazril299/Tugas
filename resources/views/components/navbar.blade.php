@@ -75,8 +75,12 @@
             </div>
             {{-- button login --}}
             <div class="flex-row order-md-last ms-auto">
-                <a href="#" class="btn btn-primary">Masuk</a>
+                @guest
+                <a href="{{ route('login') }}" class="btn btn-primary">Masuk</a>
                 <a href="{{ route('register') }}" class="btn btn-light">Daftar</a>
+                @else
+                <a href="{{ route('logout') }}" class="btn btn-danger">Logout</a>
+                @endguest
             </div>
         </div>
     </header>

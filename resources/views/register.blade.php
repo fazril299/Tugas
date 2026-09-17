@@ -3,12 +3,14 @@
 @section('content')
 <form method="POST" action="{{ route('register.store') }}">
   @csrf
+  {{-- Fieldset mengelompokkan seluruh input pendaftaran dalam satu bagian. --}}
   <fieldset class="form-fieldset w-50 d-block mx-auto">
+    {{-- Legend menjadi judul dari kelompok input di dalam fieldset. --}}
     <legend class="form-label">Register</legend>
     <div class="mb-3">
-      <label class="form-label required" for="nama">Nama Lengkap</label>
-      <input type="text" id="nama" name="nama" class="form-control @error('nama') is-invalid @enderror" autocomplete="name" required value="{{ old('nama') }}" />
-      @error('nama')
+      <label class="form-label required" for="name">Nama Lengkap</label>
+      <input type="text" id="name" name="name" class="form-control @error('name') is-invalid @enderror" autocomplete="name" required value="{{ old('name') }}" />
+      @error('name')
           <small class="text-danger">{{ $message }}</small>
       @enderror
     </div>

@@ -38,6 +38,6 @@ public function subcriptionPackageUser(): HasMany
 }
 public function checkouts(): HasMany
 {
-    return $this->hasMany(Checkouts::class);
+    return $this->hasMany(Checkout::class);
 }
 }
