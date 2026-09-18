@@ -33,6 +33,12 @@
         </div>
     @endif
 
+    @if (session('error'))
+        <div class="alert alert-danger" role="alert">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <main class="home-content py-4">
     <div id="carousel-sample" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-indicators">

@@ -66,6 +66,10 @@ class UserController extends Controller
         // Buat session baru setelah login berhasil untuk keamanan.
         $request->session()->regenerate();
 
+        if (Auth::user()->role === 'admin') {
+            return redirect()->route('admin.dashboard')->with('success', 'Login berhasil. Selamat datang, Admin!');
+        }
+
         return redirect()->route('home')->with('success', 'Login berhasil. Selamat datang kembali!');
     }
 
@@ -75,7 +79,7 @@ class UserController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('home');
+        return redirect()->route('home')->with('success', 'Logout berhasil. Sampai jumpa!');
     }
 
     /**
